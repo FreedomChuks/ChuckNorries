@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface ChuckNorrisDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertChuckNorrisJoke(entity: List<ChuckNorrisEntity>)
+    suspend fun insertChuckNorrisJoke(entity: ChuckNorrisEntity)
 
     @Query("SELECT * FROM CHUCK_NORRIS_TABLE")
     fun getChuckNorrisJoke():Flow<List<ChuckNorrisEntity>>

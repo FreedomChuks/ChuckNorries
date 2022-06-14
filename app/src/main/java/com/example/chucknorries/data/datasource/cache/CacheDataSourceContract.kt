@@ -5,7 +5,7 @@ import com.example.chucknorries.data.local.entities.ChuckNorrisEntity
 import kotlinx.coroutines.flow.Flow
 
 interface CacheDataSourceContract {
-    suspend fun insertJoke(entity: List<ChuckNorrisEntity>)
+    suspend fun insertJoke(entity: ChuckNorrisEntity)
     fun fetchJoke():Flow<List<ChuckNorrisEntity>>
     suspend fun updateJoke(entity: ChuckNorrisEntity)
 

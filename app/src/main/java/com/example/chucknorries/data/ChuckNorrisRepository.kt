@@ -1,39 +1,74 @@
 package com.example.chucknorries.data
 
 import com.example.chucknorries.data.api.ApiService
-import com.example.chucknorries.data.api.dto.Jokes
-import com.example.chucknorries.data.api.dto.JokesList
+import com.example.chucknorries.data.api.handleNetworkException
 import com.example.chucknorries.data.datasource.cache.CacheDataSourceContract
+import com.example.chucknorries.data.mapper.mapToDatabaseEntity
+import com.example.chucknorries.data.mapper.mapToDomain
+import com.example.chucknorries.data.mapper.mapToEntity
+import com.example.chucknorries.data.mapper.toEntity
 import com.example.chucknorries.domain.JokesEntity
+import com.example.chucknorries.domain.JokesListEntity
 import com.example.chucknorries.domain.utils.DataState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class ChuckNorrisRepository @Inject constructor(apiService: ApiService,cache: CacheDataSourceContract):ChuckNorrisRepositoryContract {
-    //Todo seperate task into usecases
-
-    override fun fetchRandomJokes(): Flow<DataState<Jokes>> {
-        TODO("Not yet implemented")
+class ChuckNorrisRepository @Inject constructor(private val apiService: ApiService, private val cache: CacheDataSourceContract):ChuckNorrisRepositoryContract {
+    //Todo separate task into useCases
+    override fun fetchRandomJokes(): Flow<DataState<JokesEntity>> {
+        return flow {
+            emit(DataState.Loading)
+            val response = apiService.getRandomJokes().toEntity()
+            emit(DataState.Success(response))
+        }.catch { e->
+            emit(handleNetworkException(e))
+        }
     }
 
-    override fun searchJokes(query: String): Flow<DataState<JokesList>> {
-        TODO("Not yet implemented")
+    override fun searchJokes(query: String): Flow<DataState<JokesListEntity>> {
+        return flow {
+            emit(DataState.Loading)
+            val response = apiService.searchJokes(query).mapToEntity()
+            emit(DataState.Success(response))
+
+        }.catch { e->
+            emit(handleNetworkException(e))
+        }
     }
 
-    override fun fetchJokeCategories(): Flow<List<DataState<String>>> {
-        TODO("Not yet implemented")
+    override fun fetchJokeCategories(): Flow<DataState<List<String>>>{
+        return flow {
+            emit(DataState.Loading)
+            val response = apiService.getCategory()
+            emit(DataState.Success(response))
+        }.catch { e->
+            emit(handleNetworkException(e))
+        }
+    }
+    override fun fetchJokeByCategory(category: String): Flow<DataState<JokesEntity>> {
+        return flow {
+            emit(DataState.Loading)
+            val response = apiService.getJokesByCategory(category).toEntity()
+            emit(DataState.Success(response))
+        }.catch { e->
+            emit(handleNetworkException(e))
+        }
     }
 
-    override fun fetchJokeByCategory(category: String): Flow<List<DataState<JokesList>>> {
-        TODO("Not yet implemented")
+    override suspend fun favouriteJokes(entity: JokesEntity) {
+        cache.insertJoke(entity.mapToDomain())
     }
 
-    override fun favouriteJokes(entity: JokesEntity) {
-        TODO("Not yet implemented")
-    }
+    override fun fetchJokesFromCache(): Flow<DataState<List<JokesEntity>>> {
+        return flow {
+            cache.fetchJoke().collect{
+                val result = it.map { it.mapToDatabaseEntity() }
+                emit(DataState.Success(result))
+            }
 
-    override fun fetchJokesFromCache(): Flow<List<JokesEntity>> {
-        TODO("Not yet implemented")
+        }
     }
 
 

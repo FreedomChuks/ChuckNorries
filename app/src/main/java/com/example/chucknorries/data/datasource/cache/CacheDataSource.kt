@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CacheDataSource @Inject constructor(private val dao: ChuckNorrisDAO): CacheDataSourceContract {
-    override suspend fun insertJoke(entity: List<ChuckNorrisEntity>) {
+    override suspend fun insertJoke(entity: ChuckNorrisEntity) {
         dao.insertChuckNorrisJoke(entity)
     }
 
