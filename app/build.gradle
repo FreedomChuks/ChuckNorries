@@ -1,0 +1,107 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.example.chucknorries"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+    tasks.withType(Test) {
+        useJUnitPlatform()
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
+
+
+    api appDependencies.androidCore
+    api appDependencies.appCompat
+    api appDependencies.material
+    api appDependencies.materialDialog
+    api appDependencies.constraintLayout
+    api appDependencies.lifecycle
+
+
+    //Network
+    api dataDependencies.retrofit
+    api dataDependencies.loggingIntercepter
+
+    //Room
+    api dataDependencies.roomRuntime
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    kapt dataDependencies.roomCompiler
+    api dataDependencies.roomKtx
+
+    //DI
+    api appDependencies.hiltAndroid
+    kapt appDependencies.hiltAndroidCompiler
+    kapt appDependencies.hiltViewModelCompiler
+
+    //Timber dep- For lightweight simplified logging
+    api appDependencies.timber
+
+    testImplementation testDependencies.jUnit
+    testImplementation testDependencies.truth
+    testImplementation testDependencies.coroutinesTest
+
+    //Utils
+    api appDependencies.navFragment
+    api appDependencies.navUi
+    api appDependencies.liveData
+    api appDependencies.viewModel
+    api appDependencies.coil
+    api appDependencies.circularImage
+    api dataDependencies.moshiConverter
+    api dataDependencies.moshi
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+
+    //androidTestImplementation testDependencies.androidJUnit
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.0'
+    androidTestImplementation testDependencies.androidArchCoreTesting
+    implementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
+    testImplementation 'io.mockk:mockk:1.12.3'
+    testImplementation testDependencies.junit5
+    testRuntimeOnly testDependencies.junit5
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+}
