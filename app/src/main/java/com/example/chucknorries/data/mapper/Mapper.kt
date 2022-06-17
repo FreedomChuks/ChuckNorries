@@ -3,8 +3,8 @@ package com.example.chucknorries.data.mapper
 import com.example.chucknorries.data.api.dto.Jokes
 import com.example.chucknorries.data.api.dto.JokesList
 import com.example.chucknorries.data.local.entities.ChuckNorrisEntity
-import com.example.chucknorries.domain.JokesEntity
-import com.example.chucknorries.domain.JokesListEntity
+import com.example.chucknorries.domain.entities.JokesEntity
+import com.example.chucknorries.domain.entities.JokesListEntity
 
 //DTO to JokeEntity
 fun Jokes.toEntity() = JokesEntity(

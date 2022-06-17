@@ -10,7 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.chucknorries.databinding.FragmentSearchJokeBinding
-import com.example.chucknorries.domain.JokesEntity
+import com.example.chucknorries.domain.entities.JokesEntity
 import com.example.chucknorries.ui.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class SearchJokeFragment : Fragment() {
 
     private val adapter  = SearchAdapter{data->onClick(data)}
 
-    private fun onClick(data:JokesEntity) {
+    private fun onClick(data: JokesEntity) {
 
     }
 

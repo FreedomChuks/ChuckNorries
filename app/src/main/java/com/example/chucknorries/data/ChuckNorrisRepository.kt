@@ -7,11 +7,9 @@ import com.example.chucknorries.data.mapper.mapToDatabaseEntity
 import com.example.chucknorries.data.mapper.mapToDomain
 import com.example.chucknorries.data.mapper.mapToEntity
 import com.example.chucknorries.data.mapper.toEntity
-import com.example.chucknorries.domain.JokesEntity
-import com.example.chucknorries.domain.JokesListEntity
+import com.example.chucknorries.domain.entities.JokesEntity
+import com.example.chucknorries.domain.entities.JokesListEntity
 import com.example.chucknorries.domain.utils.DataState
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 

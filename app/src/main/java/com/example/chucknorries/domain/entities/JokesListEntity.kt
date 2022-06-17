@@ -1,4 +1,4 @@
-package com.example.chucknorries.domain
+package com.example.chucknorries.domain.entities
 
 
 data class JokesListEntity(
