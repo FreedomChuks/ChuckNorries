@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_random"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_home_idel"
+        android:title="Random"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/navigation_search"
+        android:orderInCategory="2"
+        android:title="Search"
+        android:icon="@drawable/ic_round_search_24"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/navigation_category"
+        android:orderInCategory="2"
+        android:title="Category"
+        android:icon="@drawable/ic_category"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/navigation_favourite"
+        android:orderInCategory="2"
+        android:title="Favourite"
+        android:icon="@drawable/ic_round_favorite_24"
+        app:showAsAction="never"/>
+</menu>

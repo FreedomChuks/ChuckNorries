@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_random">
 
+    <fragment
+        android:id="@+id/navigation_random"
+        android:name="com.example.chucknorries.ui.RandomFragment"
+        android:label="fragment_random"
+        tools:layout="@layout/fragment_random" >
+        <action
+            android:id="@+id/action_navigation_random_to_navigation_search"
+            app:destination="@id/navigation_search" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.chucknorries.ui.SearchJokeFragment"
+        android:label="fragment_search_joke"
+        tools:layout="@layout/fragment_search_joke" >
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_category"
+            app:destination="@id/navigation_category" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_category"
+        android:name="com.example.chucknorries.ui.JokeCategoryFragment"
+        android:label="fragment_joke_category"
+        tools:layout="@layout/fragment_joke_category" >
+        <action
+            android:id="@+id/action_navigation_category_to_navigation_favourite"
+            app:destination="@id/navigation_favourite" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_favourite"
+        android:name="com.example.chucknorries.ui.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" />
 </navigation>

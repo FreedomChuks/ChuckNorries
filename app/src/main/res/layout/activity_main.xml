@@ -7,11 +7,24 @@
     tools:context=".ui.JokesActivity">
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="androidx.navigation.fragment.NavHostFragment"
         app:navGraph="@navigation/nav_graph"
         app:defaultNavHost="true"
         />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/nav_menu"
+        app:itemIconSize="26dp"
+        app:elevation="16dp"
+        app:itemHorizontalTranslationEnabled="true"
+        app:labelVisibilityMode="labeled"
+        app:itemTextColor="@drawable/bottom_nav_item_state"
+        android:layout_gravity="bottom"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

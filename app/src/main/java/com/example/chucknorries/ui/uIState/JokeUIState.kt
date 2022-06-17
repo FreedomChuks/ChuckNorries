@@ -4,7 +4,7 @@ import com.example.chucknorries.domain.JokesEntity
 
 data class JokeUIState(
     val isLoading:Boolean=false,
-    val jokeData:List<JokesEntity> = listOf(),
-    val errorMessage:String =""
+    val jokeData:List<JokesEntity> = emptyList(),
+    val errorMessage:String?=null
 
 )

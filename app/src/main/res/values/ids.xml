@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="navigation_random" type="id"/>
+    <item name="navigation_search" type="id"/>
+    <item name="navigation_category" type="id"/>
+    <item name="navigation_favourite" type="id"/>
+</resources>
