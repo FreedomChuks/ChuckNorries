@@ -1,32 +1,32 @@
 package com.example.chucknorries.data.mapper
 
-import com.example.chucknorries.data.api.dto.Jokes
-import com.example.chucknorries.data.api.dto.JokesList
-import com.example.chucknorries.data.local.entities.ChuckNorrisEntity
+import com.example.chucknorries.data.api.dto.JokesDTO
+import com.example.chucknorries.data.api.dto.JokesListDTO
+import com.example.chucknorries.data.local.entities.JokesDBEntity
 import com.example.chucknorries.domain.entities.JokesEntity
 import com.example.chucknorries.domain.entities.JokesListEntity
 
 //DTO to JokeEntity
-fun Jokes.toEntity() = JokesEntity(
+fun JokesDTO.toEntity() = JokesEntity(
     id=id,
     value = value,
     categories = categories,
 )
 
-fun JokesList.mapToEntity() = JokesListEntity(
+fun JokesListDTO.mapToEntity() = JokesListEntity(
     result = result.map { it.toEntity() }
 
 )
 
 //Database Entity to Domain Model
-fun JokesEntity.mapToDomain() = ChuckNorrisEntity(
+fun JokesEntity.mapToDatabaseEntity() = JokesDBEntity(
     id=id,
     value = value,
-    categories = categories
+    categories = categories.ifEmpty { listOf("uncategorized") }
 )
 
 //Database Entity to Domain Model
-fun ChuckNorrisEntity.mapToDatabaseEntity() = JokesEntity(
+fun JokesDBEntity.mapToDatabaseEntity() = JokesEntity(
     id=id,
     value = value,
     categories = categories

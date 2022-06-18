@@ -4,7 +4,7 @@ import androidx.room.PrimaryKey
 import com.example.chucknorries.domain.utils.Constant.CHUCK_NORRIS_TABLE
 
 @Entity(tableName = CHUCK_NORRIS_TABLE)
-data class ChuckNorrisEntity(
+data class JokesDBEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val categories: List<String>,

@@ -1,6 +1,6 @@
 package com.example.chucknorries.data.api.dto
 
-data class Jokes(
+data class JokesDTO(
     val categories: List<String>,
     val id: String,
     val value: String

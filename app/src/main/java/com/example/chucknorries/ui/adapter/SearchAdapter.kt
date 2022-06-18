@@ -1,6 +1,7 @@
 package com.example.chucknorries.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,15 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chucknorries.databinding.SearchLayoutBinding
 import com.example.chucknorries.domain.entities.JokesEntity
 
-class SearchAdapter(private val onclick:(data: JokesEntity)->Unit):ListAdapter<JokesEntity, SearchAdapter.SearchVH>(searchDiff) {
+class SearchAdapter(private val onclick:(data: JokesEntity,view: View)->Unit):ListAdapter<JokesEntity, SearchAdapter.SearchVH>(searchDiff) {
 
     inner class SearchVH(private val binding:SearchLayoutBinding):RecyclerView.ViewHolder(binding.root){
 
         fun bind(data: JokesEntity){
             binding.jokeContent.text  = data.value
-            binding.jokeContent.text = data.categories[0]
-            binding.root.setOnClickListener {
-              onclick(data)
+            binding.jokeCategory.text =  if (data.categories.isEmpty()) "uncategorized" else data.categories[0]
+            binding.fav.setOnClickListener {
+                onclick(data,it)
             }
 
         }

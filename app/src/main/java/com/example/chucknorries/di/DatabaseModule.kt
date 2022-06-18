@@ -3,7 +3,7 @@ package com.example.chucknorries.di
 import android.app.Application
 import androidx.room.Room
 import com.example.chucknorries.data.local.AppDatabase
-import com.example.chucknorries.data.local.dao.ChuckNorrisDAO
+import com.example.chucknorries.data.local.dao.JokesDAO
 import com.example.chucknorries.domain.utils.Constant.DB_NAME
 import dagger.Module
 import dagger.Provides
@@ -25,7 +25,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun providesCharacterDao(appDatabase: AppDatabase): ChuckNorrisDAO {
+    fun providesCharacterDao(appDatabase: AppDatabase): JokesDAO {
         return appDatabase.chuckNorrisDAO()
     }
 }

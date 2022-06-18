@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.chucknorries.databinding.FragmentRandomBinding
 import com.example.chucknorries.ui.uIState.JokeEvent
 import com.example.chucknorries.ui.uIState.animateImage
+import com.example.chucknorries.ui.uIState.showError
 import com.example.chucknorries.ui.uIState.showJokes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -45,7 +46,11 @@ class RandomFragment : Fragment() {
                 viewModel.uiState.collect{
                     with(binding){
                         animationView.animateImage(it.isLoading)
-                        cardDialog.showJokes(it.jokeData,jokeText,okBtn,viewModel)
+                        cardDialog.showJokes(it.jokeData,jokeText,okBtn) { viewModel.jokeShown() }
+                        it.errorMessage?.let {
+                            context?.showError(it){viewModel.errorShown()}
+                        }
+
                     }
 
                 }

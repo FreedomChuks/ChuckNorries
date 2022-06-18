@@ -1,22 +1,37 @@
 package com.example.chucknorries.data.api
 
 import com.example.chucknorries.data.api.dto.ErrorResponse
+import com.example.chucknorries.domain.utils.Constant.UNKNOWN_ERROR
 import com.example.chucknorries.domain.utils.DataState
+import com.example.chucknorries.domain.utils.UIComponent
 import com.squareup.moshi.Moshi
 import okio.IOException
 import retrofit2.HttpException
 
 fun <T>handleNetworkException(e:Throwable): DataState<T> {
-return when(e){
-    is IOException -> DataState.NetworkError(e.message.toString())
-    is HttpException -> {
-        val errorResponse = convertErrorBody(e)
-        DataState.Error(errorResponse)
+    return when(e){
+        is IOException -> DataState.Error(
+            UIComponent.Dialog(
+                title = "An Error Occurred",
+                description = e.message?:""
+            )
+        )
+        is HttpException -> {
+            val errorResponse = convertErrorBody(e)
+            DataState.Error(
+                UIComponent.Dialog(
+                    title = "Network Error",
+                    description = errorResponse?.error?:UNKNOWN_ERROR
+                ))
+        }
+        else->{
+            DataState.Error(
+                UIComponent.None(
+                    description = UNKNOWN_ERROR
+                )
+            )
+        }
     }
-    else->{
-        DataState.NetworkError(e.message?:"")
-    }
-}
 }
 
 private fun convertErrorBody(throwable: HttpException): ErrorResponse? {
