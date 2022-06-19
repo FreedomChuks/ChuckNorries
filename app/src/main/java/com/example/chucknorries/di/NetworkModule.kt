@@ -1,6 +1,6 @@
 package com.example.chucknorries.di
 
-import com.example.chucknorries.data.api.ApiService
+import com.example.chucknorries.data.remote.ApiService
 import com.example.chucknorries.domain.utils.Constant.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

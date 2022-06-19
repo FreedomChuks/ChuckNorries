@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_random"
-        android:name="com.example.chucknorries.ui.RandomFragment"
+        android:name="com.example.chucknorries.ui.RandomJokeFragment"
         android:label="fragment_random"
-        tools:layout="@layout/fragment_random" >
+        tools:layout="@layout/fragment_random_joke" >
         <action
             android:id="@+id/action_navigation_random_to_navigation_search"
             app:destination="@id/navigation_search" />

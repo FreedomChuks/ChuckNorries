@@ -6,16 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chucknorries.R
 import com.example.chucknorries.databinding.SearchLayoutBinding
 import com.example.chucknorries.domain.entities.JokesEntity
 
-class SearchAdapter(private val onclick:(data: JokesEntity,view: View)->Unit):ListAdapter<JokesEntity, SearchAdapter.SearchVH>(searchDiff) {
+class SearchAdapter(private val isFav:Boolean=false,private val onclick:(data: JokesEntity,view: View)->Unit):ListAdapter<JokesEntity, SearchAdapter.SearchVH>(searchDiff) {
 
     inner class SearchVH(private val binding:SearchLayoutBinding):RecyclerView.ViewHolder(binding.root){
 
         fun bind(data: JokesEntity){
             binding.jokeContent.text  = data.value
             binding.jokeCategory.text =  if (data.categories.isEmpty()) "uncategorized" else data.categories[0]
+            if (isFav) binding.fav.setBackgroundResource(R.drawable.ic_favorite_filled)
             binding.fav.setOnClickListener {
                 onclick(data,it)
             }

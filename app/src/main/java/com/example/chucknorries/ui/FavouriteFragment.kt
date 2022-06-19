@@ -13,13 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chucknorries.databinding.FragmentFavouriteBinding
 import com.example.chucknorries.domain.entities.JokesEntity
 import com.example.chucknorries.ui.adapter.SearchAdapter
-import com.example.chucknorries.ui.uIState.JokeEvent
-import com.example.chucknorries.ui.uIState.hapticFeedback
-import com.example.chucknorries.ui.uIState.showError
-import com.example.chucknorries.ui.uIState.toggleIcon
+import com.example.chucknorries.ui.viewState.JokeEvent
+import com.example.chucknorries.ui.viewState.hapticFeedback
+import com.example.chucknorries.ui.viewState.showError
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -32,7 +29,7 @@ class FavouriteFragment : Fragment() {
 
     private val viewModel by viewModels<JokesVM>()
 
-    private val adapter  = SearchAdapter{data,v->onClick(data,v)}
+    private val adapter  = SearchAdapter(isFav = true){data,v->onClick(data,v)}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,9 +45,9 @@ class FavouriteFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.uiState.collect{
-                    Timber.i("data ${it.jokeData}")
                     adapter.submitList(it.jokeData)
                     binding.favList.adapter=adapter
+
 
                     it.errorMessage?.let { e->
                         context?.showError(e){viewModel.errorShown()}

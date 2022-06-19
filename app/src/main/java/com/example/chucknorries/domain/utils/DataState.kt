@@ -2,15 +2,15 @@ package com.example.chucknorries.domain.utils
 
 sealed class DataState< out T>{
     class Data<T>(
-        val data: T?=null
+        val data: T
     ): DataState<T>()
 
-    data class Loading(
+    data class Loading<T>(
         val progressBarState: ProgressBarState = ProgressBarState.Idle
-    ): DataState<Nothing>()
+    ): DataState<T>()
 
-    data class Error(
+    data class Error<T>(
         val uiComponent: UIComponent
-    ) : DataState<Nothing>()
+    ) : DataState<T>()
 
 }

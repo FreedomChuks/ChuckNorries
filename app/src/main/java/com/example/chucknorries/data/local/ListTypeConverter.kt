@@ -1,10 +1,8 @@
-package com.example.chucknorries.data.local.converter
+package com.example.chucknorries.data.local
 
 import androidx.room.TypeConverter
-import com.squareup.moshi.Moshi
-import java.time.LocalDate
 
-class ListConverter {
+internal class ListTypeConverter {
     @TypeConverter
     fun fromString(stringListString: String): List<String> {
         return stringListString.split(",").map { it }

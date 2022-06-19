@@ -1,4 +1,4 @@
-package com.example.chucknorries.ui.uIState
+package com.example.chucknorries.ui.viewState
 
 import com.example.chucknorries.domain.entities.JokesEntity
 

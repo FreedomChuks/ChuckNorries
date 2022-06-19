@@ -1,9 +1,7 @@
-package com.example.chucknorries.data.api
+package com.example.chucknorries.domain.utils
 
-import com.example.chucknorries.data.api.dto.ErrorResponse
+import com.example.chucknorries.data.remote.model.ErrorResponse
 import com.example.chucknorries.domain.utils.Constant.UNKNOWN_ERROR
-import com.example.chucknorries.domain.utils.DataState
-import com.example.chucknorries.domain.utils.UIComponent
 import com.squareup.moshi.Moshi
 import okio.IOException
 import retrofit2.HttpException

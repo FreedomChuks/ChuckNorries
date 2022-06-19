@@ -9,17 +9,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.chucknorries.databinding.FragmentRandomBinding
-import com.example.chucknorries.ui.uIState.JokeEvent
-import com.example.chucknorries.ui.uIState.animateImage
-import com.example.chucknorries.ui.uIState.showError
-import com.example.chucknorries.ui.uIState.showJokes
+import com.example.chucknorries.databinding.FragmentRandomJokeBinding
+import com.example.chucknorries.ui.viewState.JokeEvent
+import com.example.chucknorries.ui.viewState.animateImage
+import com.example.chucknorries.ui.viewState.showError
+import com.example.chucknorries.ui.viewState.showJokes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RandomFragment : Fragment() {
-    private var _binding:FragmentRandomBinding?=null
+class RandomJokeFragment : Fragment() {
+    private var _binding: FragmentRandomJokeBinding?=null
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<JokesVM>()
@@ -28,7 +28,7 @@ class RandomFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRandomBinding.inflate(layoutInflater,container,false)
+        _binding =FragmentRandomJokeBinding.inflate(layoutInflater,container,false)
         onSubscribeObserver()
         setUpUI()
         return binding.root
@@ -47,6 +47,7 @@ class RandomFragment : Fragment() {
                     with(binding){
                         animationView.animateImage(it.isLoading)
                         cardDialog.showJokes(it.jokeData,jokeText,okBtn) { viewModel.jokeShown() }
+
                         it.errorMessage?.let {
                             context?.showError(it){viewModel.errorShown()}
                         }

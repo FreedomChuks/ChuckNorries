@@ -4,12 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chucknorries.data.JokesRepositoryContract
 import com.example.chucknorries.domain.entities.JokesEntity
-import com.example.chucknorries.ui.uIState.JokeEvent
-import com.example.chucknorries.ui.uIState.JokeUIState
+import com.example.chucknorries.domain.utils.DataState
+import com.example.chucknorries.domain.utils.ProgressBarState
+import com.example.chucknorries.domain.utils.UIComponent
+import com.example.chucknorries.ui.viewState.JokeEvent
+import com.example.chucknorries.ui.viewState.JokeUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,13 +22,13 @@ class JokesVM @Inject constructor(private val repositoryContract: JokesRepositor
     private val _uiState = MutableStateFlow(JokeUIState())
     val uiState:StateFlow<JokeUIState> get() = _uiState.asStateFlow()
 
-     fun onTriggerEvent(event: JokeEvent){
+    fun onTriggerEvent(event: JokeEvent){
         when(event){
             is JokeEvent.FetchByCategory -> {
-
+                fetchCategoryByCategory(event.category)
             }
             JokeEvent.FetchCategory -> {
-
+                fetchCategory()
             }
             JokeEvent.FetchFavouriteJokes -> {
                 fetchCacheJoke()
@@ -44,49 +48,55 @@ class JokesVM @Inject constructor(private val repositoryContract: JokesRepositor
     private fun fetchRandomJokes(){
         viewModelScope.launch {
             repositoryContract.fetchRandomJokes().collect{ dataState->
-                _uiState.update { it.copy(isLoading = dataState.isLoading) }
-
-                dataState.data?.let { data ->
-                    _uiState.update { it.copy(jokeData = listOf(data)) }
+                when(dataState){
+                    is DataState.Data -> {
+                        _uiState.update { it.copy(jokeData = listOf(dataState.data)) }
+                    }
+                    is DataState.Error -> {
+                        _uiState.update { it.copy(errorMessage = dataState.uiComponent) }
+                    }
+                    is DataState.Loading -> {
+                        _uiState.update { it.copy(isLoading = dataState.progressBarState) }
+                    }
                 }
-
-                dataState.errorResponse?.let { e->
-                    _uiState.update { it.copy(errorMessage = e.error) }
-                }
-
-                dataState.systemError?.let {e->
-                    _uiState.update { it.copy(errorMessage = e) }
-                }
-
             }
         }
     }
 
     fun jokeShown(){
-        _uiState.update { it.copy(jokeData = emptyList()) }
+        _uiState.update { it.copy(jokeData = emptyList(), isLoading = ProgressBarState.Idle) }
     }
 
     fun errorShown(){
-        _uiState.update { it.copy(errorMessage = null) }
+        _uiState.update { it.copy(errorMessage = null, isLoading =ProgressBarState.Idle ) }
     }
 
-    private fun searchJokes(query:String){
+    private fun searchJokes(query:String) {
         viewModelScope.launch {
-
             if (query.isEmpty()) {
-                _uiState.update { it.copy(errorMessage = "Query cannot be empty") }
+                _uiState.update {
+                    it.copy(
+                        errorMessage = UIComponent.Dialog(
+                            title = "validation",
+                            description = "search field cannot be empty"
+                        )
+                    )
+                }
                 return@launch
             }
-            repositoryContract.searchJokes(query).collect{ dataState->
-                _uiState.update { it.copy(isLoading = dataState.isLoading ) }
-
-                dataState.data?.let {  data->
-                    _uiState.update { it.copy(jokeData = data.result ) }
+            repositoryContract.searchJokes(query).collect { dataState ->
+                when (dataState) {
+                    is DataState.Data -> {
+                        _uiState.update { it.copy(jokeData = dataState.data.result) }
+                    }
+                    is DataState.Error -> {
+                        _uiState.update { it.copy(errorMessage = dataState.uiComponent) }
+                    }
+                    is DataState.Loading -> {
+                        _uiState.update { it.copy(isLoading = dataState.progressBarState) }
+                    }
                 }
 
-                dataState.errorResponse?.let { e->
-                    _uiState.update { it.copy(errorMessage = e.error ) }
-                }
             }
         }
     }
@@ -94,29 +104,68 @@ class JokesVM @Inject constructor(private val repositoryContract: JokesRepositor
     private fun favouriteJokes(entity: JokesEntity){
         viewModelScope.launch(IO) {
             val cache = repositoryContract.isJokeExits(entity.id)
-                if (!cache){
-                    repositoryContract.favouriteJokes(entity)
-                    _uiState.update { it.copy(isSaved = true) }
-                }else {
-                    repositoryContract.deleteJoke(entity)
-                    _uiState.update { it.copy(isSaved = false) }
-                }
+            if (!cache){
+                repositoryContract.favouriteJokes(entity)
+                _uiState.update { it.copy(isSaved = true) }
+            }else {
+                repositoryContract.deleteJoke(entity)
+                _uiState.update { it.copy(isSaved = false) }
+            }
         }
     }
 
     private fun fetchCacheJoke(){
         viewModelScope.launch {
-             repositoryContract.fetchJokesFromCache().collect{ dataState->
-                 dataState.data?.let { data->
-                     _uiState.update { it.copy(jokeData = data) }
-                 }
-
-             }
+            repositoryContract.fetchJokesFromCache().collect{ dataState->
+                when(dataState){
+                    is DataState.Data -> {
+                        _uiState.update { it.copy(jokeData = dataState.data) }
+                    }
+                    is DataState.Error -> {
+                        _uiState.update { it.copy(errorMessage = dataState.uiComponent) }
+                    }
+                    is DataState.Loading -> {
+                        _uiState.update{it.copy(isLoading = dataState.progressBarState)}
+                    }
+                }
+            }
         }
     }
 
-    fun checked(){
-        _uiState.update { it.copy(isSaved = false) }
+    private fun fetchCategory(){
+        viewModelScope.launch {
+            repositoryContract.fetchJokeCategories().collect{ dataState->
+                when(dataState){
+                    is DataState.Data -> {
+                        Timber.i("data ${dataState.data}")
+                        _uiState.update { it.copy(categories = dataState.data) }
+                    }
+                    is DataState.Error -> {
+                        _uiState.update { it.copy(errorMessage = dataState.uiComponent) }
+                    }
+                    is DataState.Loading -> {
+                        _uiState.update { it.copy(isLoading = dataState.progressBarState) }
+                    }
+                }
+            }
+        }
     }
 
+    private fun fetchCategoryByCategory(category:String){
+        viewModelScope.launch {
+            repositoryContract.fetchJokeByCategory(category).collect{ dataState->
+                when(dataState){
+                    is DataState.Data -> {
+                        _uiState.update { it.copy(jokeData = listOf(dataState.data)) }
+                    }
+                    is DataState.Error -> {
+                        _uiState.update { it.copy(errorMessage = dataState.uiComponent) }
+                    }
+                    is DataState.Loading -> {
+                        _uiState.update { it.copy(isLoading = dataState.progressBarState) }
+                    }
+                }
+            }
+        }
+    }
 }

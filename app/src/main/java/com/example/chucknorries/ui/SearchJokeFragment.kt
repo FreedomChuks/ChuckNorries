@@ -14,13 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.example.chucknorries.databinding.FragmentSearchJokeBinding
 import com.example.chucknorries.domain.entities.JokesEntity
 import com.example.chucknorries.ui.adapter.SearchAdapter
-import com.example.chucknorries.ui.uIState.JokeEvent
-import com.example.chucknorries.ui.uIState.hapticFeedback
-import com.example.chucknorries.ui.uIState.showError
-import com.example.chucknorries.ui.uIState.toggleIcon
+import com.example.chucknorries.ui.viewState.JokeEvent
+import com.example.chucknorries.ui.viewState.hapticFeedback
+import com.example.chucknorries.ui.viewState.showError
+import com.example.chucknorries.ui.viewState.toggleIcon
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -32,21 +30,6 @@ class SearchJokeFragment : Fragment() {
 
     private val adapter  = SearchAdapter{data,v->onClick(data,v)}
 
-    private fun onClick(data: JokesEntity,view: View) {
-        view.hapticFeedback()
-        viewModel.onTriggerEvent(JokeEvent.SaveFavouriteJokes(data))
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.uiState.collect{
-                           Timber.i("${it.isSaved}")
-                            view.toggleIcon(it.isSaved)
-                    }
-            }
-        }
-
-    }
-
     private val viewModel by viewModels<JokesVM>()
 
     override fun onCreateView(
@@ -55,11 +38,11 @@ class SearchJokeFragment : Fragment() {
     ): View {
         _binding = FragmentSearchJokeBinding.inflate(layoutInflater,container,false)
         subscribeObserver()
-        setUpRecyclerview()
+        setUpUi()
         return binding.root
     }
 
-    private fun setUpRecyclerview() {
+    private fun setUpUi() {
       binding.searchList.layoutManager= LinearLayoutManager(context,VERTICAL,false)
 
         binding.searchButton.setOnClickListener {
@@ -72,7 +55,6 @@ class SearchJokeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.uiState.collect{
-                    Timber.i("${it.isSaved}")
                     adapter.submitList(it.jokeData)
                     binding.searchList.adapter=adapter
 
@@ -83,6 +65,21 @@ class SearchJokeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun onClick(data: JokesEntity,view: View) {
+        view.hapticFeedback()
+        viewModel.onTriggerEvent(JokeEvent.SaveFavouriteJokes(data))
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.uiState.collect{
+                    Timber.i("${it.isSaved}")
+                    view.toggleIcon(it.isSaved)
+                }
+            }
+        }
+
     }
 
 }

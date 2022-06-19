@@ -1,6 +1,6 @@
-package com.example.chucknorries.data.api.dto
+package com.example.chucknorries.data.remote.model
 
-data class JokesDTO(
+data class JokesResponse(
     val categories: List<String>,
     val id: String,
     val value: String

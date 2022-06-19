@@ -1,17 +1,16 @@
 package com.example.chucknorries.data
 
-import com.example.chucknorries.data.api.ApiService
-import com.example.chucknorries.data.api.handleNetworkException
+import com.example.chucknorries.data.remote.ApiService
+import com.example.chucknorries.domain.utils.handleNetworkException
 import com.example.chucknorries.data.datasource.cache.CacheDataSourceContract
-import com.example.chucknorries.data.mapper.mapToDatabaseEntity
-import com.example.chucknorries.data.mapper.mapToEntity
-import com.example.chucknorries.data.mapper.toEntity
+import com.example.chucknorries.data.datasource.cache.mapper.mapToDatabaseEntity
+import com.example.chucknorries.data.remote.mapper.toJokeEntity
+import com.example.chucknorries.data.remote.mapper.toJokeListEntity
 import com.example.chucknorries.domain.entities.JokesEntity
 import com.example.chucknorries.domain.entities.JokesListEntity
 import com.example.chucknorries.domain.utils.DataState
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import com.example.chucknorries.domain.utils.ProgressBarState
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class JokesRepository @Inject constructor(private val apiService: ApiService, private val cache: CacheDataSourceContract):JokesRepositoryContract {
@@ -19,8 +18,8 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
     //Todo separate task into useCases
     override fun fetchRandomJokes(): Flow<DataState<JokesEntity>> {
         return flow {
-            emit(DataState.Loading)
-            val response = apiService.getRandomJokes().toEntity()
+            emit(DataState.Loading(ProgressBarState.Loading))
+            val response = apiService.getRandomJokes().toJokeEntity()
             emit(DataState.Data(response))
         }.catch { e->
             emit(handleNetworkException(e))
@@ -29,18 +28,20 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
 
     override fun searchJokes(query: String): Flow<DataState<JokesListEntity>> {
         return flow {
-            emit(DataState.Loading)
-            val response = apiService.searchJokes(query).mapToEntity()
+            emit(DataState.Loading(ProgressBarState.Loading))
+            val response = apiService.searchJokes(query).toJokeListEntity()
             emit(DataState.Data(response))
 
         }.catch { e->
             emit(handleNetworkException(e))
+        }.onCompletion {
+            emit(DataState.Loading(ProgressBarState.Idle))
         }
     }
 
     override fun fetchJokeCategories(): Flow<DataState<List<String>>>{
         return flow {
-            emit(DataState.Loading)
+            emit(DataState.Loading(ProgressBarState.Loading))
             val response = apiService.getCategory()
             emit(DataState.Data(response))
         }.catch { e->
@@ -50,8 +51,8 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
 
     override fun fetchJokeByCategory(category: String): Flow<DataState<JokesEntity>> {
         return flow {
-            emit(DataState.Loading)
-            val response = apiService.getJokesByCategory(category).toEntity()
+            emit(DataState.Loading())
+            val response = apiService.getJokesByCategory(category).toJokeEntity()
             emit(DataState.Data(response))
         }.catch { e->
             emit(handleNetworkException(e))
@@ -71,14 +72,16 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
     }
 
     override fun fetchJokesFromCache(): Flow<DataState<List<JokesEntity>>> {
-        return flow {
-            cache.fetchJoke().collect{ data->
-                val result = data.map { it.mapToDatabaseEntity() }
-                emit(DataState.Data(result))
-            }
-
+        return cache.fetchJoke().map {
+            val result = it.map {data-> data.mapToDatabaseEntity() }
+            DataState.Data(result)
+        }.onStart {
+            DataState.Loading<Nothing>(ProgressBarState.Loading)
+        }.catch {e->
+            handleNetworkException<Nothing>(e)
         }
     }
+
 
 
 }

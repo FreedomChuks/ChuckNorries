@@ -1,4 +1,4 @@
-package com.example.chucknorries.data.api.dto
+package com.example.chucknorries.data.remote.model
 
 data class ErrorResponse(
     val error: String,

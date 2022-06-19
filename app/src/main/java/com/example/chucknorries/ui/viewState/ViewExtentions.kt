@@ -1,30 +1,35 @@
-package com.example.chucknorries.ui.uIState
+package com.example.chucknorries.ui.viewState
 
 import android.content.Context
 import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
 import com.example.chucknorries.R
+import com.example.chucknorries.databinding.JokeLayoutDialogBinding
 import com.example.chucknorries.domain.entities.JokesEntity
-import com.example.chucknorries.ui.JokesVM
+import com.example.chucknorries.domain.utils.ProgressBarState
+import com.example.chucknorries.domain.utils.UIComponent
 import com.google.android.material.card.MaterialCardView
 import timber.log.Timber
-import java.lang.Exception
 
-fun LottieAnimationView.animateImage(isLoading:Boolean){
+fun LottieAnimationView.animateImage(isLoading:ProgressBarState){
     when(isLoading){
-        true->{
+        is ProgressBarState.Loading->{
+            Timber.i("progress Loading")
             this.repeatMode = LottieDrawable.INFINITE
             this.animate()
             this.playAnimation()
         }
-        false->{
+        is ProgressBarState.Idle->{
+            Timber.i("progress Idle")
             this.pauseAnimation()
         }
     }
@@ -57,13 +62,15 @@ fun View.hapticFeedback() {
  *
  *
  */
-fun Context.showError(message:String,onClick:()->Unit){
-    MaterialDialog(this).show {
-        title(text = "Error Occurred")
-        message(text = message)
-        negativeButton(text = "close") {
-            dismiss()
-            onClick()
+fun Context.showError(uiComponent: UIComponent,onClick:()->Unit){
+    if (uiComponent is UIComponent.Dialog){
+        MaterialDialog(this).show {
+            title(text = uiComponent.title)
+            message(text = uiComponent.description)
+            negativeButton(text = "close") {
+                dismiss()
+                onClick()
+            }
         }
     }
 }
@@ -85,6 +92,22 @@ fun View.toggleIcon(isSaved:Boolean){
         Timber.i("error")
         Throwable(TypeCastException("View Must be of type ImageView"))
     }
-
-
 }
+
+
+fun Context.showJokeDialog(jokes:String?,onClick: () -> Unit){
+    jokes?.let {
+        MaterialDialog(this).show {
+            val binding = JokeLayoutDialogBinding.inflate(LayoutInflater.from(context),view,true)
+            customView(view = binding.root)
+            binding.jokeText.text=jokes
+            binding.okBtn.setOnClickListener {
+                dismiss()
+                onClick()
+            }
+            cornerRadius(8F)
+        }
+    }
+}
+
+
