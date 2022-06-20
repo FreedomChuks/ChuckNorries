@@ -59,7 +59,7 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
         }
     }
 
-    override suspend fun favouriteJokes(entity: JokesEntity) {
+    override suspend fun saveFavouriteJokes(entity: JokesEntity) {
         cache.insertJoke(entity.mapToDatabaseEntity())
     }
 
@@ -67,7 +67,7 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
         return cache.isJokeExits(id)
     }
 
-    override suspend fun deleteJoke(entity: JokesEntity) {
+    override suspend fun deleteFavouriteJoke(entity: JokesEntity) {
         return cache.deleteJoke(entity.mapToDatabaseEntity())
     }
 

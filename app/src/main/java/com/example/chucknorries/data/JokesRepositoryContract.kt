@@ -10,8 +10,8 @@ interface JokesRepositoryContract {
     fun searchJokes(query:String):Flow<DataState<JokesListEntity>>
     fun fetchJokeCategories():Flow<DataState<List<String>>>
     fun fetchJokeByCategory(category: String):Flow<DataState<JokesEntity>>
-    suspend fun favouriteJokes(entity: JokesEntity)
+    suspend fun saveFavouriteJokes(entity: JokesEntity)
     suspend fun isJokeExits(id:String):Boolean
-    suspend fun deleteJoke(entity: JokesEntity)
+    suspend fun deleteFavouriteJoke(entity: JokesEntity)
     fun fetchJokesFromCache():Flow<DataState<List<JokesEntity>>>
 }

@@ -84,8 +84,12 @@ fun Context.showError(uiComponent: UIComponent,onClick:()->Unit){
  */
 fun View.toggleIcon(isSaved:Boolean){
     if (this is ImageView){
+        Timber.i("it ImageView")
         when(isSaved) {
-            true-> this.setBackgroundResource(R.drawable.ic_favorite_filled)
+            true-> {
+                Timber.i("true is called upon")
+                this.setBackgroundResource(R.drawable.ic_favorite_filled)
+            }
             false-> this.setBackgroundResource(R.drawable.ic_favorite_border)
         }
     }else{

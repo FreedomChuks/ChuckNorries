@@ -105,10 +105,10 @@ class JokesVM @Inject constructor(private val repositoryContract: JokesRepositor
         viewModelScope.launch(IO) {
             val cache = repositoryContract.isJokeExits(entity.id)
             if (!cache){
-                repositoryContract.favouriteJokes(entity)
+                repositoryContract.saveFavouriteJokes(entity)
                 _uiState.update { it.copy(isSaved = true) }
             }else {
-                repositoryContract.deleteJoke(entity)
+                repositoryContract.deleteFavouriteJoke(entity)
                 _uiState.update { it.copy(isSaved = false) }
             }
         }
