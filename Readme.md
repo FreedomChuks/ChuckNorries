@@ -1,3 +1,4 @@
+![Group 2](https://user-images.githubusercontent.com/31355965/174633092-cb44cab9-1737-4fc8-adc2-7d9d0c9a9082.png)
 
 ## Built With 🛠
 - [Kotlin]
