@@ -13,7 +13,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.BeforeEach
+import org.junit.Before
 import org.junit.jupiter.api.Test
 
 
@@ -29,7 +29,7 @@ class JokeFakeRepository {
     //dependencies
     private lateinit var cacheDataSource:JokeFakeDAO
 
-    @BeforeEach
+    @Before
     fun setup(){
         //setup
         mockWebServer = MockWebServer()

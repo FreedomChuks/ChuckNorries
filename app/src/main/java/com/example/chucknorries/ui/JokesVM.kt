@@ -19,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class JokesVM @Inject constructor(private val repositoryContract: JokesRepositoryContract):ViewModel() {
 
-    private val _uiState = MutableStateFlow(JokeUIState())
-    val uiState:StateFlow<JokeUIState> get() = _uiState.asStateFlow()
+
 
     fun onTriggerEvent(event: JokeEvent){
         when(event){

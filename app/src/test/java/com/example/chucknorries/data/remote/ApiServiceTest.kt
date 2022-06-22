@@ -32,27 +32,27 @@ class ApiServiceTest {
      * ensures the https://api.chucknorris.io/jokes/random) returns results from the api
      */
     @Test
-    fun `check that calling getPictures makes a GET request`() = runBlocking {
+    fun `check that calling getRandomJokes makes a GET request`() = runBlocking {
         api.getRandomJokes()
         assertThat("GET $REQUEST_PATH HTTP/1.1").isEqualTo(mockWebServer.takeRequest().requestLine)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `check that calling getPictures returns correct data`() = runTest {
+    fun `check that calling getRandomJokes returns correct data`() = runTest {
         val response = api.getRandomJokes()
         Assert.assertTrue(response.id=="085c_ObbSFSpHwHEdurqGQ")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `check that calling getPictures returns astronomyList`() = runTest {
+    fun `check that calling getRandomJokes returns astronomyList`() = runTest {
         val pictures = api.getRandomJokes()
         assertThat(pictures).isNotNull()
     }
 
     @Test
-    fun `check that calling fetchRecipes makes request to given path`() = runBlocking {
+    fun `check that calling getRandomJokes makes request to given path`() = runBlocking {
         api.getRandomJokes()
         assertThat(REQUEST_PATH).isEqualTo(mockWebServer.takeRequest().path)
     }
