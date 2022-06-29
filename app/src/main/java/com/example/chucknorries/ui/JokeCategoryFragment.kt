@@ -1,26 +1,22 @@
 package com.example.chucknorries.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.chucknorries.R
 import com.example.chucknorries.databinding.FragmentJokeCategoryBinding
-import com.example.chucknorries.databinding.FragmentSearchJokeBinding
 import com.example.chucknorries.ui.adapter.CategoryAdapter
-import com.example.chucknorries.ui.adapter.SearchAdapter
 import com.example.chucknorries.ui.viewState.JokeEvent
 import com.example.chucknorries.ui.viewState.showError
 import com.example.chucknorries.ui.viewState.showJokeDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class JokeCategoryFragment : Fragment() {
