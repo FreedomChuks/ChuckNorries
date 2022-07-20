@@ -23,7 +23,7 @@ class JokesRepository @Inject constructor(private val apiService: ApiService, pr
             emit(DataState.Data(response))
         }.catch { e->
             emit(handleNetworkException(e))
-        }
+        }.transform {  }
     }
 
     override fun searchJokes(query: String): Flow<DataState<JokesListEntity>> {

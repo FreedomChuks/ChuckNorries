@@ -11,8 +11,8 @@ import com.example.chucknorries.domain.entities.JokesListEntity
  *  Maps JokeListResponse (DTO) -> JokeListEntity (Domain)
  */
 internal fun JokesResponse.toJokeEntity() = JokesEntity(
-    id=id,
-    value = value,
+    id=id.orEmpty(),
+    value = value.orEmpty(),
     categories = categories,
 )
 
