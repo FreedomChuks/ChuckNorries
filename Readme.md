@@ -31,7 +31,7 @@ This app uses [***MVVM (Model View View-Model)***](
 ## Build-tool 🧰
 You need to have [Android Studio Beta 3 or above] 
 
- private fun performAbusiveReferenceCheck() {
+``` private fun performAbusiveReferenceCheck() {
         if (isAbusiveReferenceEnabledUseCase() &&
             mView.reference.isNotBlank() &&
             paymentHubScreenViewModel.isReferenceEditable &&
@@ -61,4 +61,4 @@ You need to have [Android Studio Beta 3 or above]
         } else {
             initiatePayment()
         }
-    }
+    }```
