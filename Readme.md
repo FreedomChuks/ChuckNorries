@@ -30,35 +30,3 @@ This app uses [***MVVM (Model View View-Model)***](
 
 ## Build-tool 🧰
 You need to have [Android Studio Beta 3 or above] 
-
-``` private fun performAbusiveReferenceCheck() {
-        if (isAbusiveReferenceEnabledUseCase() &&
-            mView.reference.isNotBlank() &&
-            paymentHubScreenViewModel.isReferenceEditable &&
-            !paymentHubScreenViewModel.isCompany &&
-            !paymentHubScreenViewModel.isInvestmentSafeList &&
-            !paymentHubScreenViewModel.isSolicitor &&
-            !paymentHubScreenViewModel.isHMRCSafeList
-        ) {
-            getAbusiveReferenceUseCase(mView.reference)
-                .doOnSubscribe { mView.showLoading() }
-                .subscribe({ abusivePaymentsResponse ->
-                    if (abusivePaymentsResponse.valid) {
-                        mView.setReferenceToNoneState()
-                        initiatePayment()
-                    } else {
-                        with(mView) {
-                            hideLoading()
-                            showErrorMessage(resourcesWrapper.getString(R.string.payment_hub_abusive_reference_warning_text))
-                            setReferenceToErrorState()
-                            setReferenceInputFieldTipViewText(resourcesWrapper.getString(R.string.payment_hub_abusive_reference_hint_text))
-                            paymentHubAnalytics.trackAbusiveReferencePopup(mView.reference)
-                        }
-                    }
-                }, {
-                    initiatePayment()
-                })
-        } else {
-            initiatePayment()
-        }
-    }```
